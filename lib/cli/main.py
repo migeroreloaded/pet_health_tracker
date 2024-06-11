@@ -1,5 +1,10 @@
 # Importing necessary module for command-line interface (CLI) management
 import argparse
+import sys
+from pathlib import Path
+
+# Add the project's root directory to the Python path
+sys.path.append(str(Path(__file__).resolve().parents[2]))
 
 # Importing submodules containing commands for managing users, pets, health records, and appointments
 from lib.cli import users, pets, health, appointments
