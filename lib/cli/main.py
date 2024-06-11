@@ -25,54 +25,47 @@ def display_menu():
     print("5. View appointments")
     print("0. Exit\n")
 
+# Function to display the main menu
+def display_main_menu():
+    menu_options = {
+        '1': pets.add_pet,
+        '2': health.log_health_record,
+        '3': health.view_health_records,
+        '4': appointments.set_appointment,
+        '5': appointments.view_appointments,
+        '0': sys.exit
+    }
+    while True:
+        display_menu()
+        choice = input("Enter the number of your choice: ")
+        action = menu_options.get(choice)
+        if action:
+            action()
+        else:
+            print("Invalid choice. Please enter a number between 0 and 5.")
+
 # Main function to parse command-line arguments and execute corresponding actions
 def main():
     # Display the initial menu
     display_initial_menu()
     
+    initial_options = {
+        '1': users.register_user,
+        '2': users.login_user,
+        '0': sys.exit
+    }
+    
     # Get user input until valid choice or exit
     while True:
         choice = input("Enter the number of your choice: ")
-        
-        if choice == '1':
-            users.register_user()
-            # After registration, show login menu
-            users.login_user()
-            # Display main menu after login
-            display_main_menu()
-            break
-        elif choice == '2':
-            users.login_user()
-            # Display main menu after login
-            display_main_menu()
-            break
-        elif choice == '0':
-            print("Exiting...")
-            sys.exit(0)
+        action = initial_options.get(choice)
+        if action:
+            action()
+            if choice in ['1', '2']:
+                display_main_menu()
+                break
         else:
             print("Invalid choice. Please enter a number between 0 and 2.")
-
-# Function to display the main menu
-def display_main_menu():
-    while True:
-        display_menu()
-        choice = input("Enter the number of your choice: ")
-        
-        if choice == '1':
-            pets.add_pet()
-        elif choice == '2':
-            health.log_health()
-        elif choice == '3':
-            health.view_health()
-        elif choice == '4':
-            appointments.set_appointment()
-        elif choice == '5':
-            appointments.view_appointments()
-        elif choice == '0':
-            print("Exiting...")
-            sys.exit(0)
-        else:
-            print("Invalid choice. Please enter a number between 0 and 5.")
 
 # Entry point to execute the script
 if __name__ == "__main__":

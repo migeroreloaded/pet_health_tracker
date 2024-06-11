@@ -7,25 +7,27 @@ from lib.db.models import get_db_connection
 # Function to register a new user in the system
 def register_user():
     # Get user input for registration details
-    username = input("Enter username: ")
-    password = input("Enter password: ")
-    email = input("Enter email: ")
+    user_credentials = (
+        input("Enter username: "),
+        input("Enter password: "),
+        input("Enter email: ")
+    )
 
     # Establishing connection with the database
     conn = get_db_connection()
     
     # Hashing the password before storing it in the database
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    hashed_password = bcrypt.hashpw(user_credentials[1].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     
     # Inserting user details into the 'users' table
-    conn.execute('INSERT INTO users (username, password, email) VALUES (?, ?, ?)', (username, hashed_password, email))
+    conn.execute('INSERT INTO users (username, password, email) VALUES (?, ?, ?)', (user_credentials[0], hashed_password, user_credentials[2]))
     
     # Committing the transaction and closing the database connection
     conn.commit()
     conn.close()
     
     # Printing registration success message
-    print(f"User {username} registered successfully.")
+    print(f"User {user_credentials[0]} registered successfully.")
 
 # Function to login a user
 def login_user():
