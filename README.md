@@ -31,40 +31,10 @@ A CLI application to track pet health records and appointments.
 
 ### Usage
 
-1. **Register a User**
+1. **To run the apllication use**
 
     ```sh
-    pipenv run python lib/cli/main.py register --username petlover --password secret --email petlover@example.com
-
-2. **Login a User**
-
-    ```sh
-    pipenv run python lib/cli/main.py login --username petlover --password secret
-
-3. **Add a Pet**
-
-    ```sh
-    pipenv run python lib/cli/main.py add_pet --user_id 1 --name Bella --species Dog --breed Labrador --age 3
-
-4. **Log a Health Record**
-
-    ```sh
-    pipenv run python lib/cli/main.py log_health --pet_id 1 --visit_date 2024-06-01 --notes "Annual vaccination"
-
-5. **View Health Records**
-
-    ```sh
-    pipenv run python lib/cli/main.py view_health --pet_id 1
-
-6. **Set an Appointment**
-
-    ```sh
-    pipenv run python lib/cli/main.py set_appointment --pet_id 1 --appointment_date 2024-07-01 --details "Dental cleaning"
-
-7. **View Appointments**
-
-    ```sh
-    pipenv run python lib/cli/main.py view_appointments --user_id 1
+    python lib/cli/main.py
 
 ## Contact
 
