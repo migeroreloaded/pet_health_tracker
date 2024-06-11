@@ -13,7 +13,7 @@ A CLI application to track pet health records and appointments.
 1. **Clone the repository:**
 
    ```sh
-   git clone [git@github.com:migeroreloaded/pet_health_tracker.git](git@github.com:migeroreloaded/pet_health_tracker.git)
+   git clone git@github.com:migeroreloaded/pet_health_tracker.git
 
    cd pet_health_tracker
 
