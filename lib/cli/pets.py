@@ -1,27 +1,27 @@
-# Importing function to establish connection with the database
-from lib.db.models import get_db_connection
+from lib.db.models import get_db_session, Pet
 
 # Function to add a new pet to the system
 def add_pet():
     print("\nAdd a New Pet\n")
     # Get user input for pet details
-    pet_details = (
-        input("Enter user ID: "),
-        input("Enter pet's name: "),
-        input("Enter pet's species: "),
-        input("Enter pet's breed: "),
-        input("Enter pet's age: ")
-    )
+    user_id = input("Enter user ID: ")
+    name = input("Enter pet's name: ")
+    species = input("Enter pet's species: ")
+    breed = input("Enter pet's breed: ")
+    age = input("Enter pet's age: ")
 
-    # Establishing connection with the database
-    conn = get_db_connection()
+    # Create a new session
+    session = get_db_session()
     
-    # Inserting pet details into the 'pets' table
-    conn.execute('INSERT INTO pets (user_id, name, species, breed, age) VALUES (?, ?, ?, ?, ?)', pet_details)
+    # Create a new Pet object
+    new_pet = Pet(user_id=user_id, name=name, species=species, breed=breed, age=age)
     
-    # Committing the transaction and closing the database connection
-    conn.commit()
-    conn.close()
+    # Add and commit the new pet to the database
+    session.add(new_pet)
+    session.commit()
     
-    # Printing success message
-    print(f"Pet {pet_details[1]} added successfully.")
+    # Close the session
+    session.close()
+    
+    # Print success message
+    print(f"Pet {name} added successfully.")

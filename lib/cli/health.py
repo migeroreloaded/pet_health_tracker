@@ -1,28 +1,28 @@
-# Importing function to establish connection with the database
-from lib.db.models import get_db_connection
+from lib.db.models import get_db_session, HealthRecord
 
 # Function to log a health record for a pet
 def log_health_record():
     print("\nLog a Health Record\n")
     # Get user input for health record details
-    health_record = (
-        input("Enter pet ID: "),
-        input("Enter visit date (YYYY-MM-DD): "),
-        input("Enter notes: ")
-    )
+    pet_id = input("Enter pet ID: ")
+    visit_date = input("Enter visit date (YYYY-MM-DD): ")
+    notes = input("Enter notes: ")
 
-    # Establishing connection with the database
-    conn = get_db_connection()
+    # Create a new session
+    session = get_db_session()
     
-    # Inserting health record details into the 'health_records' table
-    conn.execute('INSERT INTO health_records (pet_id, visit_date, notes) VALUES (?, ?, ?)', health_record)
+    # Create a new HealthRecord object
+    new_record = HealthRecord(pet_id=pet_id, visit_date=visit_date, notes=notes)
     
-    # Committing the transaction and closing the database connection
-    conn.commit()
-    conn.close()
+    # Add and commit the new health record to the database
+    session.add(new_record)
+    session.commit()
     
-    # Printing success message
-    print(f"Health record for pet {health_record[0]} logged successfully.")
+    # Close the session
+    session.close()
+    
+    # Print success message
+    print(f"Health record for pet {pet_id} logged successfully.")
 
 # Function to view health records of a pet
 def view_health_records():
@@ -30,15 +30,15 @@ def view_health_records():
     # Get user input for pet ID
     pet_id = input("Enter pet ID: ")
 
-    # Establishing connection with the database
-    conn = get_db_connection()
+    # Create a new session
+    session = get_db_session()
     
-    # Retrieving health records of the specified pet
-    records = conn.execute('SELECT * FROM health_records WHERE pet_id = ?', (pet_id,)).fetchall()
+    # Retrieve health records of the specified pet
+    records = session.query(HealthRecord).filter_by(pet_id=pet_id).all()
     
-    # Closing the database connection
-    conn.close()
+    # Close the session
+    session.close()
     
-    # Printing health records
+    # Print health records
     for record in records:
-        print(f"Visit Date: {record['visit_date']}, Notes: {record['notes']}")
+        print(f"Visit Date: {record.visit_date}, Notes: {record.notes}")

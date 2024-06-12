@@ -1,33 +1,31 @@
-# Importing necessary module for password hashing
 import bcrypt
-
-# Importing function to establish connection with the database
-from lib.db.models import get_db_connection
+from lib.db.models import get_db_session, User
 
 # Function to register a new user in the system
 def register_user():
     # Get user input for registration details
-    user_credentials = (
-        input("Enter username: "),
-        input("Enter password: "),
-        input("Enter email: ")
-    )
+    username = input("Enter username: ")
+    password = input("Enter password: ")
+    email = input("Enter email: ")
 
-    # Establishing connection with the database
-    conn = get_db_connection()
+    # Create a new session
+    session = get_db_session()
     
-    # Hashing the password before storing it in the database
-    hashed_password = bcrypt.hashpw(user_credentials[1].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    # Hash the password before storing it in the database
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     
-    # Inserting user details into the 'users' table
-    conn.execute('INSERT INTO users (username, password, email) VALUES (?, ?, ?)', (user_credentials[0], hashed_password, user_credentials[2]))
+    # Create a new User object
+    new_user = User(username=username, password=hashed_password, email=email)
     
-    # Committing the transaction and closing the database connection
-    conn.commit()
-    conn.close()
+    # Add and commit the new user to the database
+    session.add(new_user)
+    session.commit()
     
-    # Printing registration success message
-    print(f"User {user_credentials[0]} registered successfully.")
+    # Close the session
+    session.close()
+    
+    # Print registration success message
+    print(f"User {username} registered successfully.")
 
 # Function to login a user
 def login_user():
@@ -35,20 +33,23 @@ def login_user():
     username = input("Enter username: ")
     password = input("Enter password: ")
 
-    # Establishing connection with the database
-    conn = get_db_connection()
+    # Create a new session
+    session = get_db_session()
     
-    # Retrieving user details based on provided username
-    user = conn.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
+    # Retrieve user details based on the provided username
+    user = session.query(User).filter_by(username=username).first()
     
-    # Closing the database connection
-    conn.close()
+    # Close the session
+    session.close()
     
-    # Verifying user credentials
-    if user and bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
-        # Printing login success message
+    # Verify user credentials
+    if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+        # Print login success message
         print(f"User {username} logged in successfully.")
+        session.close()
         return True
-    # Printing login failure message
+    
+    # Print login failure message
     print("Invalid username or password.")
+    session.close()
     return False

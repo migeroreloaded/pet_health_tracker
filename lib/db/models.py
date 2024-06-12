@@ -1,61 +1,61 @@
-# Importing necessary modules for database management and date handling
-import sqlite3
-from datetime import datetime
+# Importing necessary modules for SQLAlchemy ORM
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, sessionmaker
 
-# Database file name
-DATABASE = 'pet_health_tracker.db'
+# Initialize the database engine
+DATABASE_URL = 'sqlite:///pet_health_tracker.db'
+engine = create_engine(DATABASE_URL)
 
-# Function to establish connection with the database
-def get_db_connection():
-    # Connecting to the SQLite database and setting row factory to retrieve rows as dictionaries
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
-    return conn
+# Create a base class for declarative models
+Base = declarative_base()
 
-# Function to ensure database tables are created if they don't exist
-def create_tables():
-    # Establishing connection with the database
-    conn = get_db_connection()
-    
-    # Creating tables if they don't exist based on schema
-    conn.executescript('''
-    CREATE TABLE IF NOT EXISTS users (
-        user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT NOT NULL,
-        password TEXT NOT NULL,
-        email TEXT NOT NULL
-    );
+# Define the User model
+class User(Base):
+    __tablename__ = 'users'
+    user_id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String, nullable=False, unique=True)
+    password = Column(String, nullable=False)
+    email = Column(String, nullable=False)
+    pets = relationship('Pet', back_populates='owner')
 
-    CREATE TABLE IF NOT EXISTS pets (
-        pet_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER NOT NULL,
-        name TEXT NOT NULL,
-        species TEXT NOT NULL,
-        breed TEXT NOT NULL,
-        age INTEGER NOT NULL,
-        FOREIGN KEY (user_id) REFERENCES users (user_id)
-    );
+# Define the Pet model
+class Pet(Base):
+    __tablename__ = 'pets'
+    pet_id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
+    name = Column(String, nullable=False)
+    species = Column(String, nullable=False)
+    breed = Column(String, nullable=False)
+    age = Column(Integer, nullable=False)
+    owner = relationship('User', back_populates='pets')
+    health_records = relationship('HealthRecord', back_populates='pet')
+    appointments = relationship('Appointment', back_populates='pet')
 
-    CREATE TABLE IF NOT EXISTS health_records (
-        record_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        pet_id INTEGER NOT NULL,
-        visit_date DATE NOT NULL,
-        notes TEXT NOT NULL,
-        FOREIGN KEY (pet_id) REFERENCES pets (pet_id)
-    );
+# Define the HealthRecord model
+class HealthRecord(Base):
+    __tablename__ = 'health_records'
+    record_id = Column(Integer, primary_key=True, autoincrement=True)
+    pet_id = Column(Integer, ForeignKey('pets.pet_id'), nullable=False)
+    visit_date = Column(Date, nullable=False)
+    notes = Column(String, nullable=False)
+    pet = relationship('Pet', back_populates='health_records')
 
-    CREATE TABLE IF NOT EXISTS appointments (
-        appointment_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        pet_id INTEGER NOT NULL,
-        appointment_date DATE NOT NULL,
-        details TEXT NOT NULL,
-        FOREIGN KEY (pet_id) REFERENCES pets (pet_id)
-    );
-    ''')
-    
-    # Closing the database connection
-    conn.close()
+# Define the Appointment model
+class Appointment(Base):
+    __tablename__ = 'appointments'
+    appointment_id = Column(Integer, primary_key=True, autoincrement=True)
+    pet_id = Column(Integer, ForeignKey('pets.pet_id'), nullable=False)
+    appointment_date = Column(Date, nullable=False)
+    details = Column(String, nullable=False)
+    pet = relationship('Pet', back_populates='appointments')
 
-# Entry point to execute script
-if __name__ == "__main__":
-    create_tables()
+# Create the tables in the database
+Base.metadata.create_all(engine)
+
+# Create a sessionmaker to handle database sessions
+Session = sessionmaker(bind=engine)
+
+# Function to establish a new session with the database
+def get_db_session():
+    return Session()

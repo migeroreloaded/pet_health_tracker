@@ -40,7 +40,11 @@ def display_main_menu():
         choice = input("Enter the number of your choice: ")
         action = menu_options.get(choice)
         if action:
-            action()
+            if choice == '0':
+                print("Exiting...")
+                action()
+            else:
+                action()
         else:
             print("Invalid choice. Please enter a number between 0 and 5.")
 
@@ -60,10 +64,14 @@ def main():
         choice = input("Enter the number of your choice: ")
         action = initial_options.get(choice)
         if action:
-            action()
-            if choice in ['1', '2']:
-                display_main_menu()
-                break
+            if choice == '0':
+                print("Exiting...")
+                action()
+            else:
+                action()
+                if choice in ['1', '2']:
+                    display_main_menu()
+                    break
         else:
             print("Invalid choice. Please enter a number between 0 and 2.")
 
