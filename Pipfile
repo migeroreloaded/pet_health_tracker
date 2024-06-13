@@ -8,6 +8,7 @@ bcrypt = "*"
 argparse = "*"
 python-dotenv = "*"
 sqlalchemy = "*"
+click = "*"
 
 [dev-packages]
 
