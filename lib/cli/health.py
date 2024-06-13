@@ -1,8 +1,22 @@
 from lib.db.models import get_db_session, HealthRecord
+from datetime import datetime
+
+def parse_date(visit_date):
+    """Parse date string into a Python date object."""
+    date_formats = ["%Y-%m-%d", "%Y/%m/%d"]
+    for date_format in date_formats:
+        try:
+            return datetime.strptime(visit_date, date_format).date()
+        except ValueError:
+            pass
+    raise ValueError("Invalid date format. Supported formats are YYYY-MM-DD and YYYY/MM/DD.")
 
 def log_health_record(pet_id, visit_date, notes):
     """Log a new health record for a pet."""
     try:
+        # Parse visit_date string to a Python date object
+        visit_date = parse_date(visit_date)
+
         # Establish a new database session
         session = get_db_session()
         # Create a new HealthRecord instance
