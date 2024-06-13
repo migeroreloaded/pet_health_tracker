@@ -36,6 +36,22 @@ def login_user(username, password):
     if users.login_user(username, password):
         main_menu()
 
+@cli.command()
+@click.argument('pet_id')
+@click.option('--name', default=None)
+@click.option('--species', default=None)
+@click.option('--breed', default=None)
+@click.option('--age', default=None)
+def update_pet_command(pet_id, name, species, breed, age):
+    """Update pet details"""
+    pets.update_pet(pet_id, name, species, breed, age)
+
+@cli.command()
+@click.argument('pet_id')
+def delete_pet_command(pet_id):
+    """Delete a pet"""
+    pets.delete_pet(pet_id)
+
 def main_menu():
     """Display the main menu and handle user choices."""
     while True:
@@ -46,6 +62,8 @@ def main_menu():
         print("3. View health records")
         print("4. Set an appointment")
         print("5. View appointments")
+        print("6. Update Pet Details")
+        print("7. Delete Pet")
         print("0. Exit\n")
 
         # Get user's choice
@@ -75,6 +93,16 @@ def main_menu():
         elif choice == '5':
             user_id = input("Enter user ID: ")
             appointments.view_appointments(user_id)
+        elif choice == '6':
+            pet_id = input("Enter pet ID: ")
+            name = input("Enter new pet name (leave blank to keep unchanged): ")
+            species = input("Enter new species (leave blank to keep unchanged): ")
+            breed = input("Enter new breed (leave blank to keep unchanged): ")
+            age = input("Enter new age (leave blank to keep unchanged): ")
+            pets.update_pet(pet_id, name if name else None, species if species else None, breed if breed else None, int(age) if age else None)
+        elif choice == '7':
+            pet_id = input("Enter pet ID: ")
+            pets.delete_pet(pet_id)
         elif choice == '0':
             print("Exiting...")
             sys.exit(0)
@@ -85,8 +113,8 @@ def initial_menu():
     """Display the initial menu and handle user choices."""
     while True:
         print("\nWelcome to Pet Health Tracker CLI!\n")
-        print("1. Register a new user")
-        print("2. Login a user")
+        print("1. Register ")
+        print("2. Login ")
         print("0. Exit\n")
 
         choice = input("Enter the number of your choice: ")
