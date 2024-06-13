@@ -51,7 +51,9 @@ class Appointment(Base):
     pet = relationship('Pet', back_populates='appointments')
 
 # Create the tables in the database
-Base.metadata.create_all(engine)
+def create_tables():
+    """Create all tables."""
+    Base.metadata.create_all(engine)
 
 # Create a sessionmaker to handle database sessions
 Session = sessionmaker(bind=engine)
