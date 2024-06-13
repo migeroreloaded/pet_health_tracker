@@ -1,6 +1,3 @@
-# Importing necessary module for database management
-import sqlite3
-
 # Importing function to create database tables from models.py
 from models import create_tables  
 
