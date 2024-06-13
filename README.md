@@ -24,6 +24,8 @@ A CLI application to track pet health records and appointments.
     ```sh
     pipenv install
 
+    pipenv shell
+
 4. **Initialize the database**
 
     ```sh
