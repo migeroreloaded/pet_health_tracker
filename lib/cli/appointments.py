@@ -1,8 +1,22 @@
 from lib.db.models import get_db_session, Appointment, Pet
+from datetime import datetime
+
+def parse_date(appointment_date):
+    """Parse date string into a Python date object."""
+    date_formats = ["%Y-%m-%d", "%Y/%m/%d"]
+    for date_format in date_formats:
+        try:
+            return datetime.strptime(appointment_date, date_format).date()
+        except ValueError:
+            pass
+    raise ValueError("Invalid date format. Supported formats are YYYY-MM-DD and YYYY/MM/DD.")
 
 def set_appointment(pet_id, appointment_date, details):
     """Set a new appointment for a pet."""
     try:
+        # Parse appointment_date string to a Python date object
+        appointment_date = parse_date(appointment_date)
+
         # Establish a new database session
         session = get_db_session()
         # Create a new Appointment instance
