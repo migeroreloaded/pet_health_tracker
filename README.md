@@ -4,13 +4,21 @@ This is a CLI and ORM project by *Michael George* first created in June 2024
 
 ## Description
 
-A CLI application to track pet health records and appointments.
+Pet Health Tracker is a command-line interface (CLI) application built in Python to help pet owners manage their pets' health records and appointments. This application allows users to register/login, add pets, log health records, set appointments, and view pet health-related information conveniently from the terminal.
+
+### Features
+
+- **User Management:** Users can register new accounts and log in securely.
+- **Pet Management:** Add pets with details like name, species, breed, and age.
+- **Health Records:** Log health records for pets, including visit dates and notes.
+- **Appointments:** Set appointments for pets with details like appointment date and description.
+- **View Records and Appointments:** Easily view health records and upcoming appointments.
 
 ## How to Run
 
 ### Setup
 
-1. **Clone the repository:**
+1. **Clone the repository and navigate to project directory:**
 
    ```sh
    git clone git@github.com:migeroreloaded/pet_health_tracker.git
@@ -19,7 +27,7 @@ A CLI application to track pet health records and appointments.
 
 2. Or by downloading a ZIP file of the code. The repository, if downloaded as a .zip file will need to be extracted to your preferred location.
 
-3. **Install the dependacies**
+3. **Install the dependacies and launch shell environment**
 
     ```sh
     pipenv install
@@ -37,6 +45,8 @@ A CLI application to track pet health records and appointments.
 
     ```sh
     python lib/cli/main.py
+
+2. Follow the on-screen instructions to register/login, manage pets, log health records, set appointments, and view information.
 
 ## Contact
 
