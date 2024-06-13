@@ -1,3 +1,5 @@
+# lib/cli/main.py
+
 import sys
 from pathlib import Path
 import click
@@ -20,7 +22,9 @@ def cli():
 def register_user(username, password, email):
     """Register a new user"""
     # Calls the register_user function from the users module
-    users.register_user(username, password, email)
+    # If registration is successful, display the main menu
+    if users.register_user(username, password, email):
+        main_menu()
 
 @cli.command()
 @click.argument('username')
@@ -79,27 +83,31 @@ def main_menu():
 
 def initial_menu():
     """Display the initial menu and handle user choices."""
-    print("\nWelcome to Pet Health Tracker CLI!\n")
-    print("1. Register a new user")
-    print("2. Login a user")
-    print("0. Exit\n")
+    while True:
+        print("\nWelcome to Pet Health Tracker CLI!\n")
+        print("1. Register a new user")
+        print("2. Login a user")
+        print("0. Exit\n")
 
-    choice = input("Enter the number of your choice: ")
-    if choice == '1':
-        username = input("Enter username: ")
-        password = input("Enter password: ")
-        email = input("Enter email: ")
-        users.register_user(username, password, email)
-    elif choice == '2':
-        username = input("Enter username: ")
-        password = input("Enter password: ")
-        if users.login_user(username, password):
-            main_menu()
-    elif choice == '0':
-        print("Exiting...")
-        sys.exit(0)
-    else:
-        print("Invalid choice. Please enter a number between 0 and 2.")
+        choice = input("Enter the number of your choice: ")
+        if choice == '1':
+            username = input("Enter username: ")
+            password = input("Enter password: ")
+            email = input("Enter email: ")
+            users.register_user(username, password, email)
+            main_menu()  # Display the main menu after registration
+            break  # Exit the loop after displaying the main menu
+        elif choice == '2':
+            username = input("Enter username: ")
+            password = input("Enter password: ")
+            if users.login_user(username, password):
+                main_menu()
+                break  # Exit the loop after displaying the main menu
+        elif choice == '0':
+            print("Exiting...")
+            sys.exit(0)
+        else:
+            print("Invalid choice. Please enter a number between 0 and 2.")
 
 if __name__ == "__main__":
     # Start with the initial menu

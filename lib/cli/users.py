@@ -16,9 +16,11 @@ def register_user(username, password, email):
         # Close the session
         session.close()
         print(f"User {username} registered successfully.")
+        return True
     except Exception as e:
         # Print any errors that occur
         print(f"Error registering user: {e}")
+        return False
 
 def login_user(username, password):
     """Login a user."""
